@@ -153,6 +153,12 @@ export async function getAllVacationRequests(status?: string): Promise<{
   if (status) query = query.eq('status', status)
 
   const { data: vacations, error } = await query
+
+  console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+  console.log('KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+  console.log('vacations count:', vacations?.length)
+  console.log('error:', JSON.stringify(error))
+  
   if (error || !vacations) return { data: null, error: error?.message }
 
   // Obtener perfiles por separado

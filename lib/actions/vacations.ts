@@ -140,10 +140,15 @@ export async function getAllVacationRequests(status?: string): Promise<{
   error: string | undefined
 }> {
   const { createClient: createServiceClient } = await import('@supabase/supabase-js')
-  const supabase = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+const supabase = createServiceClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    global: {
+      fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' })
+    }
+  }
+)
 
   let query = supabase
     .from('vacation_requests')

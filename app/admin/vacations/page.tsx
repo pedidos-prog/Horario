@@ -21,7 +21,16 @@ export default async function AdminVacationsPage({
   searchParams: { status?: string }
 }) {
   const filter = searchParams.status ?? ''
-  const { data: requests } = await getAllVacationRequests(undefined)
+  const { data: requests, error } = await getAllVacationRequests(undefined)
+
+  if (!requests || requests.length === 0) {
+  return (
+    <div className="p-6">
+      <p>requests: {JSON.stringify(requests)}</p>
+      <p>error: {String(error)}</p>
+    </div>
+  )
+}
   
   const pending = requests?.filter((r) => r.status === 'pending').length ?? 0
 

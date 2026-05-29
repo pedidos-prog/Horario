@@ -139,7 +139,11 @@ export async function getAllVacationRequests(status?: string): Promise<{
   data: VacationRequestWithProfile[] | null
   error: string | undefined
 }> {
-  const supabase = await createClient()
+  const { createClient: createServiceClient } = await import('@supabase/supabase-js')
+  const supabase = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
   let query = supabase
     .from('vacation_requests')

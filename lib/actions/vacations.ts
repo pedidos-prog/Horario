@@ -140,6 +140,10 @@ export async function getAllVacationRequests(status?: string): Promise<{
   error: string | undefined
 }> {
   const { createClient: createServiceClient } = await import('@supabase/supabase-js')
+  
+  console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+  console.log('SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+  
   const supabase = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -153,5 +157,9 @@ export async function getAllVacationRequests(status?: string): Promise<{
   if (status) query = query.eq('status', status)
 
   const { data, error } = await query
+  
+  console.log('VACATIONS DATA:', JSON.stringify(data))
+  console.log('VACATIONS ERROR:', error)
+  
   return { data: (data ?? null) as VacationRequestWithProfile[] | null, error: error?.message }
 }

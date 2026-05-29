@@ -137,9 +137,17 @@ export default function ClockPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+        {error}
+        {error.includes('fichaje de ayer sin cerrar') && (
+        <a
+        href="/worker/history"
+        className="block mt-2 bg-red-600 hover:bg-red-700 text-white text-center font-medium py-2 rounded-lg transition-colors"
+      >
+        Ir a Historial para regularizarlo →
+      </a>
+    )}
+  </div>
+)}
 
       {/* Botones de acción */}
       <div className="space-y-2">

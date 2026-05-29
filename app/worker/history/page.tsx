@@ -345,7 +345,6 @@ export default function HistoryPage() {
                                 {entry.time_entry_corrections.map((c: { reason: string; corrected_by_role: string; created_at: string; original_timestamp: string; corrected_timestamp: string }, i) => (
                                   <p key={i} className="text-[10px] text-gray-400">
                                     {new Date(c.original_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} · <span className="italic">{c.reason}</span>
-                                    {new Date(c.original_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} → {new Date(c.corrected_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                                   </p>
                                 ))}
                               </div>

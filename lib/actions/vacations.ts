@@ -140,10 +140,6 @@ export async function getAllVacationRequests(status?: string): Promise<{
   error: string | undefined
 }> {
   const { createClient: createServiceClient } = await import('@supabase/supabase-js')
-  
-  console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-  console.log('SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
-  
   const supabase = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -151,15 +147,25 @@ export async function getAllVacationRequests(status?: string): Promise<{
 
   let query = supabase
     .from('vacation_requests')
-    .select('*, profiles(full_name, email, department)')
+    .select('*')
     .order('created_at', { ascending: false })
 
   if (status) query = query.eq('status', status)
 
-  const { data, error } = await query
-  
-  console.log('VACATIONS DATA:', JSON.stringify(data))
-  console.log('VACATIONS ERROR:', error)
-  
-  return { data: (data ?? null) as VacationRequestWithProfile[] | null, error: error?.message }
+  const { data: vacations, error } = await query
+  if (error || !vacations) return { data: null, error: error?.message }
+
+  // Obtener perfiles por separado
+  const userIds = [...new Set(vacations.map((v: any) => v.user_id))]
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, full_name, email, department')
+    .in('id', userIds)
+
+  const data = vacations.map((v: any) => ({
+    ...v,
+    profiles: profiles?.find((p: any) => p.id === v.user_id) ?? null,
+  }))
+
+  return { data: data as VacationRequestWithProfile[], error: undefined }
 }

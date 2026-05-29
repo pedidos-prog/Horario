@@ -21,15 +21,16 @@ export default async function AdminVacationsPage({
   searchParams: { status?: string }
 }) {
   const filter = searchParams.status ?? ''
-  const { data: requests } = await getAllVacationRequests(filter || undefined)
-
+  //const { data: requests } = await getAllVacationRequests(filter || undefined)
+  const { data: requests, error } = await getAllVacationRequests(filter || undefined)
+  console.log('requests:', requests, 'error:', error)
   const pending = requests?.filter((r) => r.status === 'pending').length ?? 0
 
   return (
     <div className="p-6 space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Vacaciones</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Vacaciones — {requests?.length ?? 0} solicitudes — {error ?? 'sin error'}</h1>
           <p className="text-sm text-gray-400 mt-0.5">
             {pending > 0 ? `${pending} solicitudes pendientes de revisión` : 'Sin solicitudes pendientes'}
           </p>

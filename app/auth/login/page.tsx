@@ -2,12 +2,15 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -15,17 +18,16 @@ export default function LoginPage() {
     setError('')
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+      password,
     })
 
     if (error) {
-      setError(error.message)
+      setError('Email o contraseña incorrectos')
     } else {
-      setSent(true)
+      router.push('/')
+      router.refresh()
     }
     setLoading(false)
   }
@@ -42,60 +44,68 @@ export default function LoginPage() {
               </svg>
             </div>
             <h1 className="text-xl font-semibold text-gray-900">Control Horario</h1>
-            <p className="text-sm text-gray-400 mt-1">Accede con tu email de empresa</p>
+            <p className="text-sm text-gray-400 mt-1">Accede con tu email y contraseña</p>
           </div>
 
-          {sent ? (
-            <div className="text-center space-y-3">
-              <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mx-auto">
-                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <polyline points="20 6 9 17 4 12" strokeWidth="2"/>
-                </svg>
-              </div>
-              <p className="text-sm font-medium text-gray-900">Revisa tu email</p>
-              <p className="text-sm text-gray-400">
-                Hemos enviado un enlace de acceso a <strong>{email}</strong>. Pulsa el enlace para entrar.
-              </p>
-              <button
-                onClick={() => setSent(false)}
-                className="text-sm text-blue-600 hover:text-blue-700 underline"
-              >
-                Usar otro email
-              </button>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="text-xs font-medium text-gray-500 block mb-1.5">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tu@empresa.com"
+                required
+                autoComplete="email"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors"
+              />
             </div>
-          ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="text-xs font-medium text-gray-500 block mb-1.5">
-                  Email
-                </label>
+
+            <div>
+              <label className="text-xs font-medium text-gray-500 block mb-1.5">Contraseña</label>
+              <div className="relative">
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@empresa.com"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
                   required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors"
+                  autoComplete="current-password"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors pr-11"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" strokeWidth="1.5"/>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" strokeWidth="1.5"/>
+                      <line x1="1" y1="1" x2="23" y2="23" strokeWidth="1.5"/>
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" strokeWidth="1.5"/>
+                      <circle cx="12" cy="12" r="3" strokeWidth="1.5"/>
+                    </svg>
+                  )}
+                </button>
               </div>
+            </div>
 
-              {error && (
-                <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
-              )}
+            {error && (
+              <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+            )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-medium py-3 rounded-xl text-sm transition-all disabled:opacity-50"
-              >
-                {loading ? 'Enviando...' : 'Enviar enlace de acceso →'}
-              </button>
-
-              <p className="text-xs text-gray-400 text-center">
-                Sin contraseña. Recibirás un enlace por email.
-              </p>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-medium py-3 rounded-xl text-sm transition-all disabled:opacity-50"
+            >
+              {loading ? 'Entrando...' : 'Entrar →'}
+            </button>
+          </form>
         </div>
       </div>
     </div>

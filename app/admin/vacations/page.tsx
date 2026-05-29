@@ -103,7 +103,10 @@ export default async function AdminVacationsPage({
                             'use server'
                             await reviewVacationRequest(req.id, 'approved')
                           }}>
-                            <button type="submit" className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium px-3 py-1.5 rounded-lg transition-colors">
+                            <button
+                              type="submit"
+                              className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium px-3 py-1.5 rounded-lg transition-colors"
+                            >
                               Aprobar
                             </button>
                           </form>
@@ -111,7 +114,10 @@ export default async function AdminVacationsPage({
                             'use server'
                             await reviewVacationRequest(req.id, 'rejected')
                           }}>
-                            <button type="submit" className="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-medium px-3 py-1.5 rounded-lg transition-colors">
+                            <button
+                              type="submit"
+                              className="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-medium px-3 py-1.5 rounded-lg transition-colors"
+                            >
                               Rechazar
                             </button>
                           </form>

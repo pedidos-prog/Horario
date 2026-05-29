@@ -66,6 +66,13 @@ export default async function WorkerLayout({
           </svg>
           <span className="text-[10px]">Historial</span>
         </Link>
+        <Link href="/worker/profile" className="flex-1 flex flex-col items-center py-3 gap-0.5 text-gray-400 hover:text-blue-600 transition-colors">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeWidth="1.5"/>
+            <circle cx="12" cy="7" r="4" strokeWidth="1.5"/>
+          </svg>
+          <span className="text-[10px]">Perfil</span>
+        </Link>
       </nav>
     </div>
   )

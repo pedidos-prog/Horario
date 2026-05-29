@@ -62,20 +62,22 @@ export async function getWorkSummary(startDate: string, endDate: string) {
   return { data, error: error?.message }
 }
 
-/** ADMIN: Da de alta un nuevo empleado */
+/** ADMIN: Da de alta un nuevo empleado con contraseña */
 export async function createEmployee(
   email: string,
   fullName: string,
+  password: string,
   department?: string,
   vacationDays = 22
 ) {
   const supabase = await createClient()
 
-  // Crear usuario en auth con magic link (sin contraseña)
-  const { data: authData, error: authError } = await supabase.auth.admin.inviteUserByEmail(email, {
-    data: {
-      full_name: fullName,
-    },
+  // Crear usuario con email y contraseña
+  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: fullName },
   })
 
   if (authError) {

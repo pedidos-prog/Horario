@@ -153,7 +153,7 @@ export default async function AdminDashboard() {
               <div key={req.id} className="px-5 py-4 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-900">
-                    {(req as { profiles?: { full_name: string } }).profiles?.full_name}
+                    {req.profiles?.full_name}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">
                     {new Date(req.start_date).toLocaleDateString('es-ES')} → {new Date(req.end_date).toLocaleDateString('es-ES')} · {req.days_count} días

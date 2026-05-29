@@ -191,8 +191,8 @@ export default function VacationsPage() {
                   <p className="text-sm font-medium text-gray-900">
                     {formatDate(req.start_date)} — {formatDate(req.end_date)}
                   </p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_STYLES[req.status]}`}>
-                    {STATUS_LABELS[req.status]}
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_STYLES[req.status as VacationStatus]}`}>
+                    {STATUS_LABELS[req.status as VacationStatus]}
                   </span>
                 </div>
                 <p className="text-xs text-gray-400">{req.days_count} días laborables</p>

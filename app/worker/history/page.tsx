@@ -342,9 +342,10 @@ export default function HistoryPage() {
                             {/* Historial de correcciones */}
                             {entry.time_entry_corrections && entry.time_entry_corrections.length > 0 && (
                               <div className="mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                {entry.time_entry_corrections.map((c: { reason: string; corrected_by_role: string; created_at: string; original_timestamp: string; corrected_timestamp: string }, i) => (
+                                {entry.time_entry_corrections.map((c, i) => (
                                   <p key={i} className="text-[10px] text-gray-400">
-                                    {new Date(c.original_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} · <span className="italic">{c.reason}</span>
+                                    {c.corrected_by_role === 'admin' ? '👤 Admin' : '✏️ Yo'} · {c.reason} ·{' '}
+                                    {new Date(c.original_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} → {new Date(c.corrected_timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                                   </p>
                                 ))}
                               </div>

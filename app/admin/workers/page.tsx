@@ -36,9 +36,10 @@ export default async function WorkersPage() {
             'use server'
             const email = formData.get('email') as string
             const fullName = formData.get('full_name') as string
+            const password = formData.get('password') as string
             const department = formData.get('department') as string
             const vacationDays = parseInt(formData.get('vacation_days') as string) || 22
-            await createEmployee(email, fullName, department, vacationDays)
+            await createEmployee(email, fullName, password, department, vacationDays)
           }}
           className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
@@ -59,6 +60,17 @@ export default async function WorkersPage() {
               required
               className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-400"
               placeholder="maria@empresa.com"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-gray-500 block mb-1">Contraseña inicial *</label>
+            <input
+              name="password"
+              type="password"
+              required
+              minLength={6}
+              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-400"
+              placeholder="Mínimo 6 caracteres"
             />
           </div>
           <div>
@@ -85,8 +97,9 @@ export default async function WorkersPage() {
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
             >
-              Invitar empleado por email →
+              Crear empleado →
             </button>
+            <p className="text-xs text-gray-400 mt-2">El empleado entrará con su email y la contraseña que asignes. Puedes comunicársela por teléfono o mensaje.</p>
           </div>
         </form>
       </div>

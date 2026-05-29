@@ -1,5 +1,5 @@
 import { getAllVacationRequests, reviewVacationRequest } from '@/lib/actions/vacations'
-import { VacationStatus } from '@/types'
+import { VacationStatus, VacationRequest } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -77,33 +77,34 @@ export default async function AdminVacationsPage({
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {requests.map((req) => {
-                  const prof = (req as { profiles?: { full_name: string; email: string; department?: string } }).profiles
+                  const typedReq = req as VacationRequest & { profiles?: { full_name: string; email: string; department?: string } }
+                  const prof = typedReq.profiles
                   return (
-                    <tr key={req.id}>
+                    <tr key={typedReq.id}>
                       <td className="px-5 py-4">
                         <p className="font-medium text-gray-900">{prof?.full_name}</p>
                         <p className="text-xs text-gray-400">{prof?.department ?? prof?.email}</p>
                       </td>
                       <td className="px-4 py-4 text-gray-600 tabular-nums">
-                        {new Date(req.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                        {new Date(typedReq.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
                         {' → '}
-                        {new Date(req.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(typedReq.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
-                      <td className="px-4 py-4 text-gray-600">{req.days_count}</td>
+                      <td className="px-4 py-4 text-gray-600">{typedReq.days_count}</td>
                       <td className="px-4 py-4">
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${STATUS_STYLES[req.status]}`}>
-                          {STATUS_LABELS[req.status]}
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${STATUS_STYLES[typedReq.status]}`}>
+                          {STATUS_LABELS[typedReq.status]}
                         </span>
                       </td>
                       <td className="px-4 py-4 text-xs text-gray-400 max-w-[160px] truncate">
-                        {req.notes ?? '—'}
+                        {typedReq.notes ?? '—'}
                       </td>
                       <td className="px-4 py-4">
-                        {req.status === 'pending' && (
+                        {typedReq.status === 'pending' && (
                           <div className="flex gap-2">
                             <form action={async () => {
                               'use server'
-                              await reviewVacationRequest(req.id, 'approved')
+                              await reviewVacationRequest(typedReq.id, 'approved')
                             }}>
                               <button
                                 type="submit"
@@ -114,7 +115,7 @@ export default async function AdminVacationsPage({
                             </form>
                             <form action={async () => {
                               'use server'
-                              await reviewVacationRequest(req.id, 'rejected')
+                              await reviewVacationRequest(typedReq.id, 'rejected')
                             }}>
                               <button
                                 type="submit"
@@ -125,9 +126,9 @@ export default async function AdminVacationsPage({
                             </form>
                           </div>
                         )}
-                        {req.status !== 'pending' && req.reviewed_at && (
+                        {typedReq.status !== 'pending' && typedReq.reviewed_at && (
                           <p className="text-xs text-gray-300">
-                            {new Date(req.reviewed_at).toLocaleDateString('es-ES')}
+                            {new Date(typedReq.reviewed_at).toLocaleDateString('es-ES')}
                           </p>
                         )}
                       </td>

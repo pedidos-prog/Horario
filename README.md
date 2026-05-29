@@ -132,4 +132,3 @@ control-horario/
 | Días de vacaciones por defecto | `supabase/migrations/001_schema.sql` → `vacation_days_total DEFAULT 22` |
 | Tipos de parada | `types/index.ts` → `BreakType` y `lib/clock.ts` → `BREAK_LABELS` |
 | Logo y nombre de la app | `app/layout.tsx` y `public/manifest.json` |
-"# Horario" 

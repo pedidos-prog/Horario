@@ -159,7 +159,7 @@ export async function getAllVacationRequests(status?: string): Promise<{
   console.log('vacations count:', vacations?.length)
   console.log('error:', JSON.stringify(error))
 
-  if (error || !vacations) return { data: null, error: error?.message }
+  if (error || !vacations) return { data: null, error: error?.message } 
 
   // Obtener perfiles por separado
   const userIds = Array.from(new Set(vacations.map((v: any) => v.user_id)))

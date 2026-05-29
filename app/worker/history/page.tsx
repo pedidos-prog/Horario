@@ -22,6 +22,7 @@ type EntryWithCorrections = {
     corrected_by_role: string
     created_at: string
     original_timestamp: string
+    corrected_timestamp: string
   }[]
 }
 

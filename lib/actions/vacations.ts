@@ -158,7 +158,7 @@ export async function getAllVacationRequests(status?: string): Promise<{
   console.log('KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
   console.log('vacations count:', vacations?.length)
   console.log('error:', JSON.stringify(error))
-  
+
   if (error || !vacations) return { data: null, error: error?.message }
 
   // Obtener perfiles por separado
@@ -168,10 +168,12 @@ export async function getAllVacationRequests(status?: string): Promise<{
     .select('id, full_name, email, department')
     .in('id', userIds)
 
-  const data = vacations.map((v: any) => ({
+   const data = vacations.map((v: any) => ({
     ...v,
     profiles: profiles?.find((p: any) => p.id === v.user_id) ?? null,
   }))
-
+  console.log('profiles count:', profiles?.length)
+  console.log('userIds:', JSON.stringify(userIds))
+  console.log('data final:', JSON.stringify(data))
   return { data: data as VacationRequestWithProfile[], error: undefined }
 }

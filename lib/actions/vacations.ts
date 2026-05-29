@@ -156,7 +156,7 @@ export async function getAllVacationRequests(status?: string): Promise<{
   if (error || !vacations) return { data: null, error: error?.message }
 
   // Obtener perfiles por separado
-  const userIds = [...new Set(vacations.map((v: any) => v.user_id))]
+  const userIds = Array.from(new Set(vacations.map((v: any) => v.user_id)))
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, full_name, email, department')

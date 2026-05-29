@@ -1,5 +1,5 @@
 import { getAllVacationRequests, reviewVacationRequest } from '@/lib/actions/vacations'
-import { VacationStatus, VacationRequest } from '@/types'
+import { VacationStatus } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,7 +44,7 @@ export default async function AdminVacationsPage({
           { label: 'Aprobadas', value: 'approved' },
           { label: 'Rechazadas', value: 'rejected' },
         ].map((f) => (
-          <a
+          
             key={f.value}
             href={f.value ? `/admin/vacations?status=${f.value}` : '/admin/vacations'}
             className={`text-sm px-4 py-1.5 rounded-xl border transition-colors ${
@@ -76,65 +76,55 @@ export default async function AdminVacationsPage({
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {requests.map((req) => {
-                  const typedReq = req as VacationRequest & { profiles?: { full_name: string; email: string; department?: string } }
-                  const prof = typedReq.profiles
-                  return (
-                    <tr key={typedReq.id}>
-                      <td className="px-5 py-4">
-                        <p className="font-medium text-gray-900">{prof?.full_name}</p>
-                        <p className="text-xs text-gray-400">{prof?.department ?? prof?.email}</p>
-                      </td>
-                      <td className="px-4 py-4 text-gray-600 tabular-nums">
-                        {new Date(typedReq.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
-                        {' → '}
-                        {new Date(typedReq.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </td>
-                      <td className="px-4 py-4 text-gray-600">{typedReq.days_count}</td>
-                      <td className="px-4 py-4">
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${STATUS_STYLES[typedReq.status]}`}>
-                          {STATUS_LABELS[typedReq.status]}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-xs text-gray-400 max-w-[160px] truncate">
-                        {typedReq.notes ?? '—'}
-                      </td>
-                      <td className="px-4 py-4">
-                        {typedReq.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <form action={async () => {
-                              'use server'
-                              await reviewVacationRequest(typedReq.id, 'approved')
-                            }}>
-                              <button
-                                type="submit"
-                                className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium px-3 py-1.5 rounded-lg transition-colors"
-                              >
-                                Aprobar
-                              </button>
-                            </form>
-                            <form action={async () => {
-                              'use server'
-                              await reviewVacationRequest(typedReq.id, 'rejected')
-                            }}>
-                              <button
-                                type="submit"
-                                className="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-medium px-3 py-1.5 rounded-lg transition-colors"
-                              >
-                                Rechazar
-                              </button>
-                            </form>
-                          </div>
-                        )}
-                        {typedReq.status !== 'pending' && typedReq.reviewed_at && (
-                          <p className="text-xs text-gray-300">
-                            {new Date(typedReq.reviewed_at).toLocaleDateString('es-ES')}
-                          </p>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
+                {requests.map((req) => (
+                  <tr key={req.id}>
+                    <td className="px-5 py-4">
+                      <p className="font-medium text-gray-900">{req.profiles?.full_name}</p>
+                      <p className="text-xs text-gray-400">{req.profiles?.department ?? req.profiles?.email}</p>
+                    </td>
+                    <td className="px-4 py-4 text-gray-600 tabular-nums">
+                      {new Date(req.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                      {' → '}
+                      {new Date(req.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className="px-4 py-4 text-gray-600">{req.days_count}</td>
+                    <td className="px-4 py-4">
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${STATUS_STYLES[req.status as VacationStatus]}`}>
+                        {STATUS_LABELS[req.status as VacationStatus]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-xs text-gray-400 max-w-[160px] truncate">
+                      {req.notes ?? '—'}
+                    </td>
+                    <td className="px-4 py-4">
+                      {req.status === 'pending' && (
+                        <div className="flex gap-2">
+                          <form action={async () => {
+                            'use server'
+                            await reviewVacationRequest(req.id, 'approved')
+                          }}>
+                            <button type="submit" className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium px-3 py-1.5 rounded-lg transition-colors">
+                              Aprobar
+                            </button>
+                          </form>
+                          <form action={async () => {
+                            'use server'
+                            await reviewVacationRequest(req.id, 'rejected')
+                          }}>
+                            <button type="submit" className="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-medium px-3 py-1.5 rounded-lg transition-colors">
+                              Rechazar
+                            </button>
+                          </form>
+                        </div>
+                      )}
+                      {req.status !== 'pending' && req.reviewed_at && (
+                        <p className="text-xs text-gray-300">
+                          {new Date(req.reviewed_at).toLocaleDateString('es-ES')}
+                        </p>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

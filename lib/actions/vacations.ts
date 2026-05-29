@@ -168,7 +168,10 @@ export async function getAllVacationRequests(status?: string): Promise<{
     .select('id, full_name, email, department')
     .in('id', userIds)
 
-   const data = vacations.map((v: any) => ({
+  console.log('vacations antes del map:', JSON.stringify(vacations))
+  console.log('profiles antes del map:', JSON.stringify(profiles)) 
+
+  const data = vacations.map((v: any) => ({
     ...v,
     profiles: profiles?.find((p: any) => p.id === v.user_id) ?? null,
   }))

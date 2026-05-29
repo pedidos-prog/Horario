@@ -44,7 +44,7 @@ export default async function AdminVacationsPage({
           { label: 'Aprobadas', value: 'approved' },
           { label: 'Rechazadas', value: 'rejected' },
         ].map((f) => (
-          
+          <a
             key={f.value}
             href={f.value ? `/admin/vacations?status=${f.value}` : '/admin/vacations'}
             className={`text-sm px-4 py-1.5 rounded-xl border transition-colors ${

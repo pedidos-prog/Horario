@@ -168,5 +168,21 @@ export async function getAllVacationRequests(status?: string) {
   if (status) query = query.eq('status', status)
 
   const { data, error } = await query
-  return { data, error: error?.message }
+
+  return {
+    data: data as Array<{
+      id: string
+      user_id: string
+      start_date: string
+      end_date: string
+      days_count: number
+      status: 'pending' | 'approved' | 'rejected'
+      notes: string | null
+      admin_notes: string | null
+      reviewed_at: string | null
+      created_at: string
+      profiles: { full_name: string; email: string; department: string | null } | null
+    }> | null,
+    error: error?.message
+  }
 }
